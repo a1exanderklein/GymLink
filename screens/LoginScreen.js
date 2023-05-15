@@ -1,28 +1,53 @@
-import React from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const LoginScreen = () => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [inputFocused, setInputFocused] = useState(false);
+
+  const formatPhoneNumber = (number) => {
+    const formatted = number.replace(/\D/g, '').substring(0, 10);
+    let formattedPhoneNumber = '';
+  
+    if (formatted.length > 6) {
+      formattedPhoneNumber = `${formatted.slice(0, 3)}-${formatted.slice(3, 6)}-${formatted.slice(6)}`;
+    } else if (formatted.length > 3) {
+      formattedPhoneNumber = `${formatted.slice(0, 3)}-${formatted.slice(3)}`;
+    } else if (formatted.length > 0) {
+      formattedPhoneNumber = formatted;
+    }
+  
+    return formattedPhoneNumber;
+  };  
+  
+  const handleInputFocus = () => {
+    setInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setInputFocused(false);
+  };
+
   return (
-    <KeyboardAvoidingView
-    style={styles.container}
-    behavior='padding'
-    >
+    <KeyboardAvoidingView style={styles.container} behavior='padding'>
       <View style={styles.title}>
         <Text style={styles.titleText}>GYMLINK</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
-            maxLength={10}
-            textAlign= 'center'
-            placeholder='Phone Number'
-            fontFamily= 'Avenir-Heavy'
-            fontSize= '19'
-            // value={ }
-            // onChangeText={text => }
-            style={styles.input}
+          maxLength={12}
+          textAlign='center'
+          placeholder={inputFocused ? 'XXX-XXX-XXXX' : 'Phone Number'}
+          fontFamily='Avenir-Heavy'
+          fontSize={19}
+          value={formatPhoneNumber(phoneNumber)}
+          onChangeText={setPhoneNumber}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          style={styles.input}
         />
       </View>
-
+      
       <View style={styles.buttonContainer}>
         <TouchableOpacity
             onPress={() => {}}
