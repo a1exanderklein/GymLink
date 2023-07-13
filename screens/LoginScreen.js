@@ -1,32 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Firebase_Auth } from '../firebase.js';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [inputFocused, setInputFocused] = useState(false);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const auth = Firebase_Auth
 
-  const formatPhoneNumber = (number) => {
-    const formatted = number.replace(/\D/g, '').substring(0, 10);
-    let formattedPhoneNumber = '';
-  
-    if (formatted.length > 6) {
-      formattedPhoneNumber = `${formatted.slice(0, 3)}-${formatted.slice(3, 6)}-${formatted.slice(6)}`;
-    } else if (formatted.length > 3) {
-      formattedPhoneNumber = `${formatted.slice(0, 3)}-${formatted.slice(3)}`;
-    } else if (formatted.length > 0) {
-      formattedPhoneNumber = formatted;
+  const navigation = useNavigation()
+
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged(user => {
+  //     if (user) {
+  //       navigation.navigate("Home")
+  //     }
+  //   })
+  //   return unsubscribe
+  // }, [])
+
+  const handleSignUp = async () => {
+    setLoading(true)
+    try {
+      const response = await createUserWithEmailAndPassword(auth, email, password)
+      console.log("Registration Successful")
+      console.log("User Email: " + email)
+      alert("Successfully Registered \nYou may now Login")
+    } catch (error) {
+      console.log(error)
+      alert("Registration Failed: " + error.message)
+    } finally {
+      setLoading(false)
     }
-  
-    return formattedPhoneNumber;
-  };  
-  
-  const handleInputFocus = () => {
-    setInputFocused(true);
-  };
+  }
 
-  const handleInputBlur = () => {
-    setInputFocused(false);
-  };
+  const handleSignIn = async () => {
+    setLoading(true)
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password)
+      console.log("Sign In Successful")
+      console.log("User Email: " + email)
+      navigation.navigate("Home")
+    } catch (error) {
+      console.log(error)
+      alert("Sign In Failed: " + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -35,25 +58,40 @@ const LoginScreen = () => {
       </View>
       <View style={styles.inputContainer}>
         <TextInput
-          maxLength={12}
           textAlign='center'
-          placeholder={inputFocused ? 'XXX-XXX-XXXX' : 'Phone Number'}
+          placeholder={'Email Address'}
           fontFamily='Avenir-Heavy'
           fontSize={19}
-          value={formatPhoneNumber(phoneNumber)}
-          onChangeText={setPhoneNumber}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
+          value={email}
+          onChangeText={text => setEmail(text)}
           style={styles.input}
+          marginBottom = {10}
+        />
+        <TextInput
+          maxLength={12}
+          textAlign='center'
+          placeholder={'Password'}
+          fontFamily='Avenir-Heavy'
+          fontSize={19}
+          value={password}
+          onChangeText={text => setPassword(text)}
+          style={styles.input}
+          secureTextEntry
         />
       </View>
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-            onPress={() => {}}
+            onPress={handleSignIn}
             style={[styles.button, styles.buttonOutline]}
         >
-            <Text style={styles.buttonText}>Send Verification Code</Text>
+            <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={handleSignUp}
+            style={[styles.button]}
+        >
+            <Text style={styles.buttonOutlineText}>Register</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -73,21 +111,22 @@ const styles = StyleSheet.create({
     title: {
       //'GYMLINK'
       textAlign: 'center',
-      marginBottom: 20,
+      marginBottom: 30,
     },
     titleText: {
-      fontSize: 70,
+      fontSize: 80,
       fontFamily: 'AvenirNextCondensed-Bold',
       color: '#ffffff'
     },
     inputContainer: {
-      //Phone number input box
+      //Email & Password input box
       width: '70%',
+      marginBottom: 20,
     },
     input: {
-      //Spacing and color for Phone Number
+      //Spacing and color for Inputs
       backgroundColor: 'white',
-      paddingHorizontal: 30,
+      paddingHorizontal: 10,
       paddingVertical: 20,
       borderRadius: 20,
     },
@@ -96,13 +135,15 @@ const styles = StyleSheet.create({
       width: '70%',
       justifyContent: 'center',
       alignItems: 'center', 
-      marginTop: 10
+      paddingTop: 10,
+      paddingBottom: 10,
     },
     button:{
         backgroundColor: 'white',
         width: '100%',
         padding: 15,
         borderRadius: 20,
+        marginBottom: 10,
     },
     buttonText:{
       //'Send Verification Code'
@@ -115,6 +156,13 @@ const styles = StyleSheet.create({
       backgroundColor: '#7454de',
       marginTop: 2,
       borderColor: 'white',
-      borderWidth: 2
+      borderWidth: 3
+    },
+    buttonOutlineText:{
+      //'Send Verification Code'
+      textAlign: 'center',
+      color: '#7454de',
+      fontFamily: 'Avenir-Heavy',
+      fontSize: 20
     },
 })
