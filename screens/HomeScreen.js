@@ -1,39 +1,48 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Ionicons } from "@expo/vector-icons"
+import Swiper from 'react-native-deck-swiper'
+
+const TEST_DATA = [
+  {
+    firstName: "Alexander",
+    lastName: "Klein",
+    fitnessLevel: "Advanced",
+    photoURL: "images\\jacked.jpg",
+    age: 18,
+  },
+  {
+    firstName: "Nathan",
+    lastName: "Glen",
+    fitnessLevel: "Elite",
+    photoURL: "images\\Pic_nathan.jpg",
+    age: 19,
+  },
+  {
+    firstName: "Sophia",
+    lastName: "Iaconis",
+    fitnessLevel: "Intermediate",
+    photoURL: "images\\Pic_soph.jpg",
+    age: 19,
+  },
+]
+
 
 const HomeScreen = () => {
   const navigation = useNavigation()
 
   return (
     <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.leftContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-            <Image
-              style={styles.imageProfile}
-              source={require('../images/headshot.jpg')}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.centerContainer}>
-          <TouchableOpacity>
-            <Text style={styles.titleText}>GYMLINK</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.rightContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
-            {/* <Image
-              style={styles.imageChat}
-              source={require('../images/chat.png')}
-            /> */}
-            <Ionicons name='chatbubbles-sharp' size={45} color={'#7454de'}/>
-          </TouchableOpacity>
-        </View>
+      <View>
+        <Swiper 
+          cards={TEST_DATA}
+          renderCard={(card) => {
+            <View>
+              <Text>{card.firstName}</Text>
+            </View>        
+          }}      
+        />
       </View>
-
-      <Text>Home Screen</Text>
     </SafeAreaView>
   );
 };
