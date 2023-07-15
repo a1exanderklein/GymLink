@@ -4,7 +4,7 @@ import { Firebase_Auth } from '../firebase.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = () => {
+const LoginScreen = ({ setUser }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -12,14 +12,15 @@ const LoginScreen = () => {
 
   const navigation = useNavigation()
 
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged(user => {
-  //     if (user) {
-  //       navigation.navigate("Home")
-  //     }
-  //   })
-  //   return unsubscribe
-  // }, [])
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setUser(user);
+        // navigation.navigate("Home")
+      }
+    })
+    return unsubscribe
+  }, [])
 
   const handleSignUp = async () => {
     setLoading(true)
@@ -27,7 +28,7 @@ const LoginScreen = () => {
       const response = await createUserWithEmailAndPassword(auth, email, password)
       console.log("Registration Successful")
       console.log("User Email: " + email)
-      alert("Successfully Registered \nYou may now Login")
+      // alert("Successfully Registered \nYou may now Login")
     } catch (error) {
       console.log(error)
       alert("Registration Failed: " + error.message)
@@ -42,7 +43,7 @@ const LoginScreen = () => {
       const response = await signInWithEmailAndPassword(auth, email, password)
       console.log("Sign In Successful")
       console.log("User Email: " + email)
-      navigation.navigate("Home")
+      // navigation.navigate("Home")
     } catch (error) {
       console.log(error)
       alert("Sign In Failed: " + error.message)
