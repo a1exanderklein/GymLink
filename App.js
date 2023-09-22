@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
-
+  
   return (
     <NavigationContainer>
       {user ? ( 

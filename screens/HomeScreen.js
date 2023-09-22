@@ -10,6 +10,7 @@ const TEST_DATA = [
     fitnessLevel: "Advanced",
     photoURL: "images\\jacked.jpg",
     age: 18,
+    id: 123,
   },
   {
     firstName: "Nathan",
@@ -17,6 +18,7 @@ const TEST_DATA = [
     fitnessLevel: "Elite",
     photoURL: "images\\Pic_nathan.jpg",
     age: 19,
+    id: 456,
   },
   {
     firstName: "Sophia",
@@ -24,6 +26,7 @@ const TEST_DATA = [
     fitnessLevel: "Intermediate",
     photoURL: "images\\Pic_soph.jpg",
     age: 19,
+    id: 789,
   },
 ]
 
@@ -32,15 +35,16 @@ const HomeScreen = () => {
   const navigation = useNavigation()
 
   return (
-    <SafeAreaView>
-      <View>
+    <SafeAreaView style={flex=1}>
+      <View style={styles.cardStyle}>
         <Swiper 
+          style={styles.cardContainer}
           cards={TEST_DATA}
-          renderCard={(card) => {
-            <View>
+          renderCard={(card) => (
+            <View key={card.id} style={styles.card}>
               <Text>{card.firstName}</Text>
             </View>        
-          }}      
+          )}      
         />
       </View>
     </SafeAreaView>
@@ -50,35 +54,16 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 15,
-    marginTop: 10,
+  cardStyle: {
+    flex: 1,
+    marginTop: -10,
   },
-  leftContainer: {
-    padding: 2,
+  cardContainer: {
+    backgroundColor: "red",
   },
-  centerContainer: {
-    padding: 5,
-    alignItems: 'center',
-  },
-  rightContainer: {
-    padding: 2,
-  },
-  imageProfile: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-  },
-  imageChat:{
-    height: 45,
-    width: 45,
-  },
-  titleText: {
-    fontSize: 40,
-    fontFamily: 'AvenirNextCondensed-Bold',
-    color: '#7454de',
-  },
+  card: {
+    backgroundColor: "#7454de",
+    height: 75,
+    borderRadius: 20,
+  }
 });
